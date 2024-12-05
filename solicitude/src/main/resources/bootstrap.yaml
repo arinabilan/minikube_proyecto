@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: solicitude
+  cloud:
+    config:
+      enabled: true
+      uri: http://localhost:8082
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:3306/bankservice-solicitude
+    username: arina
+    password: 1234
+  jpa:
+    hibernate:
+      ddl-auto: update
