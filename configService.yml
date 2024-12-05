@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: configservice
+  labels:
+    app: configservice
+spec:
+  selector:
+    matchLabels:
+      app: configservice
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: configservice
+    spec:
+      containers:
+      - name: configservice
+        image: aribakan/configservice:latest
+        ports:
+        - containerPort: 8002
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: configservice
+  labels:
+    app: configservice
+spec:
+  selector:
+    app: configservice
+  ports:
+    - nodePort: 30500
+      protocol: TCP
+      port: 8010
+      targetPort: 8002
+  type: NodePort
