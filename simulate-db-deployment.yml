@@ -64,6 +64,11 @@ spec:
                 secretKeyRef:
                   name: mysql-secret
                   key: password
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: rootpassword
           volumeMounts:
             - mountPath: /var/lib/mysql/data
               name: simulation-db-data
