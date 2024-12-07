@@ -8,7 +8,7 @@ spec:
   selector:
     matchLabels:
       app: eurekaservice
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
@@ -33,4 +33,5 @@ spec:
     - protocol: TCP
       port: 8761
       targetPort: 8761
-  type: LoadBalancer
+      nodePort: 30000 # Puedes asignar un puerto accesible
+  type: NodePort

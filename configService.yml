@@ -8,7 +8,7 @@ spec:
   selector:
     matchLabels:
       app: configservice
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
@@ -33,4 +33,4 @@ spec:
     - protocol: TCP
       port: 8082
       targetPort: 8082
-  type: LoadBalancer
+  type: ClusterIP
