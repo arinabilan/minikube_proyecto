@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config-map
+  labels:
+    app: mysql-config-map
+data:
+  DB_HOST_SIMULATION: simulate-db-service
+  DB_NAME_SIMULATION: bankservice-simulate
+  DB_PORT_SIMULATION: "3306"

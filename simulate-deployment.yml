@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simulate
+  labels:
+    app: simulate
+spec:
+  selector:
+    matchLabels:
+      app: simulate
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: simulate
+    spec:
+      containers:
+      - name: simulate
+        image: aribakan/simulate:latest
+        ports:
+        - containerPort: 8092
+        env:
+        - name: SERVER_PORT
+          value: "0"
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-config-map
+              key: DB_HOST_SIMULATION
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-config-map
+              key: DB_PORT_SIMULATION
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-config-map
+              key: DB_NAME_SIMULATION
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: password

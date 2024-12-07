@@ -1,42 +1,42 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql
+  name: mysql-simulate
   labels:
-    app: mysql
+    app: mysql-simulate
 spec:
   ports:
   - port: 3306
     targetPort: 3306
   selector:
-    app: mysql
+    app: mysql-simulate
   clusterIP: None
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mysql
+  name: mysql-simulate
   labels:
-    app: mysql
+    app: mysql-simulate
 spec:
   selector:
     matchLabels:
-      app: mysql
+      app: mysql-simulate
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: mysql
+        app: mysql-simulate
     spec:
       containers:
       - image: mysql:latest
-        name: mysql
+        name: mysql-simulate
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: mysql-root-credentials
+              name: mysql-simulate-root-credentials
               key: password
         - name: MYSQL_USER
           valueFrom:
