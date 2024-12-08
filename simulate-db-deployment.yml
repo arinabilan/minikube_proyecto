@@ -70,7 +70,7 @@ spec:
                   name: mysql-secret
                   key: rootpassword
           volumeMounts:
-            - mountPath: /var/lib/mysql/data
+            - mountPath: /var/lib/mysql/
               name: simulation-db-data
       volumes:
         - name: simulation-db-data
@@ -92,4 +92,4 @@ spec:
   selector:
     app: simulation-db-deployment
     tier: database
-  type: NodePort
+  type: ClusterIP
