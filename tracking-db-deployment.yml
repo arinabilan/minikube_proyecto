@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: solicitude-db-pv
+  name: tracking-db-pv
   labels:
     type: local
 spec:
@@ -11,12 +11,12 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/data/solicitude-db-data"
+    path: "/data/tracking-db-data"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: solicitude-db-pvc
+  name: tracking-db-pvc
   labels:
     app: mysql
     tier: database
@@ -31,24 +31,24 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: solicitude-db-deployment
+  name: tracking-db-deployment
   labels:
-    app: solicitude-db-deployment
+    app: tracking-db-deployment
     tier: database
 spec:
   selector:
     matchLabels:
-      app: solicitude-db-deployment
+      app: tracking-db-deployment
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: solicitude-db-deployment
+        app: tracking-db-deployment
         tier: database
     spec:
       containers:
-        - name: solicitude-db
+        - name: tracking-db
           image: mysql
           imagePullPolicy: "IfNotPresent"
           ports:
@@ -71,18 +71,18 @@ spec:
                   key: rootpassword
           volumeMounts:
             - mountPath: /var/lib/mysql
-              name: solicitude-db-data
+              name: tracking-db-data
       volumes:
-        - name: solicitude-db-data
+        - name: tracking-db-data
           persistentVolumeClaim:
-            claimName: solicitude-db-pvc
+            claimName: tracking-db-pvc
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: solicitude-db-service
+  name: tracking-db-service
   labels:
-    app: solicitude-db-service
+    app: tracking-db-service
     tier: database
 spec:
   ports:
@@ -90,6 +90,6 @@ spec:
       targetPort: 3306
       protocol: TCP
   selector:
-    app: solicitude-db-deployment
+    app: tracking-db-deployment
     tier: database
   type: ClusterIP

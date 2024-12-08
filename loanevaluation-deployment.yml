@@ -18,7 +18,7 @@ spec:
       - name: loanevaluation
         image: aribakan/loanevaluation:latest
         ports:
-        - containerPort: 8093
+        - containerPort: 8095
         env:
         - name: SERVER_PORT
           value: "0"

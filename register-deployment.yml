@@ -18,7 +18,7 @@ spec:
       - name: register
         image: aribakan/register:latest
         ports:
-        - containerPort: 8093
+        - containerPort: 8096
         env:
         - name: SERVER_PORT
           value: "0"

@@ -18,7 +18,7 @@ spec:
       - name: tracking
         image: aribakan/tracking:latest
         ports:
-        - containerPort: 8093
+        - containerPort: 8094
         env:
         - name: SERVER_PORT
           value: "0"
