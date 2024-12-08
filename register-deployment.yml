@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: register
+  labels:
+    app: register
+spec:
+  selector:
+    matchLabels:
+      app: register
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: register
+    spec:
+      containers:
+      - name: register
+        image: aribakan/register:latest
+        ports:
+        - containerPort: 8093
+        env:
+        - name: SERVER_PORT
+          value: "0"
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-config-map
+              key: DB_HOST_REGISTER
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-config-map
+              key: DB_PORT_REGISTER
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-config-map
+              key: DB_NAME_REGISTER
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: password
