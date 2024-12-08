@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loanevaluation
+  labels:
+    app: loanevaluation
+spec:
+  selector:
+    matchLabels:
+      app: loanevaluation
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: loanevaluation
+    spec:
+      containers:
+      - name: loanevaluation
+        image: aribakan/loanevaluation:latest
+        ports:
+        - containerPort: 8093
+        env:
+        - name: SERVER_PORT
+          value: "0"
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-config-map
+              key: DB_HOST_LOANEVALUATION
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-config-map
+              key: DB_PORT_LOANEVALUATION
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-config-map
+              key: DB_NAME_LOANEVALUATION
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: password

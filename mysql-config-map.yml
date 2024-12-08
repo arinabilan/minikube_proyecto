@@ -11,4 +11,12 @@ data:
   DB_HOST_REGISTER: register-db-service
   DB_NAME_REGISTER: bankservice-register
   DB_PORT_REGISTER: "3306"
-  
+  DB_HOST_SOLICITUDE: solicitude-db-service
+  DB_NAME_SOLICITUDE: bankservice-solicitude
+  DB_PORT_SOLICITUDE: "3306"
+  DB_HOST_TRACKING: tracking-db-service
+  DB_NAME_TRACKING: bankservice-tracking
+  DB_PORT_TRACKING: "3306"
+  DB_HOST_LOANEVALUATION: loanevaluation-db-service
+  DB_NAME_LOANEVALUATION: bankservice-loanevaluation
+  DB_PORT_LOANEVALUATION: "3306"

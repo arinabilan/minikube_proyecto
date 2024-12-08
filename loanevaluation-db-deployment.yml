@@ -1,0 +1,95 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: loanevaluation-db-pv
+  labels:
+    type: local
+spec:
+  storageClassName: standard
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/data/loanevaluation-db-data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: loanevaluation-db-pvc
+  labels:
+    app: mysql
+    tier: database
+spec:
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loanevaluation-db-deployment
+  labels:
+    app: loanevaluation-db-deployment
+    tier: database
+spec:
+  selector:
+    matchLabels:
+      app: loanevaluation-db-deployment
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: loanevaluation-db-deployment
+        tier: database
+    spec:
+      containers:
+        - name: loanevaluation-db
+          image: mysql
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: username
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: password
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: rootpassword
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: loanevaluation-db-data
+      volumes:
+        - name: loanevaluation-db-data
+          persistentVolumeClaim:
+            claimName: loanevaluation-db-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loanevaluation-db-service
+  labels:
+    app: loanevaluation-db-service
+    tier: database
+spec:
+  ports:
+    - port: 3306
+      targetPort: 3306
+      protocol: TCP
+  selector:
+    app: loanevaluation-db-deployment
+    tier: database
+  type: ClusterIP

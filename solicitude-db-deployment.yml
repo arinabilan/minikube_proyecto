@@ -1,0 +1,95 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: solicitude-db-pv
+  labels:
+    type: local
+spec:
+  storageClassName: standard
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/data/solicitude-db-data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: solicitude-db-pvc
+  labels:
+    app: mysql
+    tier: database
+spec:
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: solicitude-db-deployment
+  labels:
+    app: solicitude-db-deployment
+    tier: database
+spec:
+  selector:
+    matchLabels:
+      app: solicitude-db-deployment
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: solicitude-db-deployment
+        tier: database
+    spec:
+      containers:
+        - name: solicitude-db
+          image: mysql
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: username
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: password
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: rootpassword
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: solicitude-db-data
+      volumes:
+        - name: solicitude-db-data
+          persistentVolumeClaim:
+            claimName: solicitude-db-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: solicitude-db-service
+  labels:
+    app: solicitude-db-service
+    tier: database
+spec:
+  ports:
+    - port: 3306
+      targetPort: 3306
+      protocol: TCP
+  selector:
+    app: solicitude-db-deployment
+    tier: database
+  type: ClusterIP

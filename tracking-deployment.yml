@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tracking
+  labels:
+    app: tracking
+spec:
+  selector:
+    matchLabels:
+      app: tracking
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: tracking
+    spec:
+      containers:
+      - name: tracking
+        image: aribakan/tracking:latest
+        ports:
+        - containerPort: 8093
+        env:
+        - name: SERVER_PORT
+          value: "0"
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-config-map
+              key: DB_HOST_TRACKING
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-config-map
+              key: DB_PORT_TRACKING
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: mysql-config-map
+              key: DB_NAME_TRACKING
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: password
