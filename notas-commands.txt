@@ -44,3 +44,61 @@ http://172.20.192.74:30500/book
 ----------------------------------
 https://www.base64decode.org/
 ----------------------------------
+
+
+#################################################################
+PASOS PARA SUBIR UN MICROSERVICIO
+----------------------------------
+[optional] actualizar mysql-configmap => kubectl apply -f <mysql-configmap.yml>
+1) subir servicio-db-deployment => kubectl apply -f <archivo-db.yml>
+2) copiar script sql a pod => kubectl cp <archivo> <pod>:<archivo>
+3) ejecutar script => mysql -u root -p < /<archivo>
+4) subir servicio-deployment => kubectl apply -f <archivo-db.yml>
+
+## NOTA: ##
+Si el microservicio o bd ya existe y se está ejecutando:
+1) Actualizar servicio => kubectl apply -f <archivo-db.yml>
+2) Reiniciar servicio después de la actualización => kubectl rollout restart deployment <nombre del servicio>
+ej: kubectl rollout restart deployment simulate
+
+----------------------------------
+Copiar un archivo a un pods:
+----------------------------------
+archivo: init-simulate.sql
+pod: simulation-db-deployment-6655b65d6b-db5nk
+
+kubectl cp .\init-simulate.sql simulation-db-deployment-6655b65d6b-db5nk:init-simulate.sql
+
+----------------------------------
+Entrar al shell de un pod:
+----------------------------------
+pod: simulation-db-deployment-6655b65d6b-db5nk
+
+kubectl exec -it simulation-db-deployment-6655b65d6b-db5nk -- /bin/bash
+
+----------------------------------
+Importar el archivo a mysql del pod:
+----------------------------------
+mysql -u root -p < /init-simulate.sql
+
+----------------------------------
+Mysql:
+----------------------------------
+Ingreso con root:
+mysql -u root -p (pide clave después de ENTER)
+
+Ingreso con usuario:
+mysql -u <usuario> -p (pide clave después de ENTER)
+
+Mostrar bases de datos:
+show databases;
+
+Usar o posicionarse en una base de datos:
+use `bankservice-simulate`;
+
+Mostrar las tablas:
+show tables;
+
+Mostrar la definición (estructura) de una tabla:
+describe simulate_entity;
+#################################################################
