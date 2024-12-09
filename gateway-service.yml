@@ -33,5 +33,6 @@ spec:
     - protocol: TCP
       port: 8090
       targetPort: 8090
-      nodePort: 30007 # Puedes asignar un puerto accesible
-  type: NodePort
+      #nodePort: 30007 # Puedes asignar un puerto accesible
+  #type: NodePort
+  type: LoadBalancer
