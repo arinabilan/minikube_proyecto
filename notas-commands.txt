@@ -102,3 +102,110 @@ show tables;
 Mostrar la definición (estructura) de una tabla:
 describe simulate_entity;
 #################################################################
+
+
+POR SI SE CAE MINIKUBE,O SE ELIMINA
+
+kubectl apply -f mysql-config-map.yml
+kubectl apply -f mysql-secret.yml
+kubectl apply -f configService.yml
+kubectl apply -f eurekaService.yml
+kubectl apply -f gateway-service.yml
+
+kubectl apply -f simulate-db-deployment.yml
+kubectl get pods
+kubectl cp init-simulate.sql simulate-db-deployment-69d9fc9ffb-dlxb5:init-simulate.sql
+kubectl exec -it simulate-db-deployment-69d9fc9ffb-dlxb5 -- /bin/bash
+mysql -u root -p < /init-simulate.sql
+kubectl apply -f simulate-deployment.yml
+
+kubectl apply -f register-db-deployment.yml
+kubectl get pods
+kubectl cp init-register.sql register-db-deployment-69d9fc9ffb-dlxb5:init-register.sql
+kubectl exec -it register-db-deployment-69d9fc9ffb-dlxb5 -- /bin/bash
+mysql -u root -p < /init-register.sql
+kubectl apply -f register-deployment.yml
+
+kubectl apply -f solicitude-db-deployment.yml
+kubectl get pods
+kubectl cp init-solicitude.sql solicitude-db-deployment-69d9fc9ffb-dlxb5:init-solicitude.sql
+kubectl exec -it solicitude-db-deployment-69d9fc9ffb-dlxb5 -- /bin/bash
+mysql -u root -p < /init-solicitude.sql
+kubectl apply -f solicitude-deployment.yml
+
+kubectl apply -f loanevaluation-db-deployment.yml
+kubectl get pods
+kubectl cp init-loanevaluation.sql loanevaluation-db-deployment-69d9fc9ffb-dlxb5:init-loanevaluation.sql
+kubectl exec -it loanevaluation-db-deployment-69d9fc9ffb-dlxb5 -- /bin/bash
+mysql -u root -p < /init-loanevaluation.sql
+kubectl apply -f loanevaluation-deployment.yml
+
+kubectl apply -f tracking-db-deployment.yml
+kubectl get pods
+kubectl cp init-tracking.sql tracking-db-deployment-69d9fc9ffb-dlxb5:init-tracking.sql
+kubectl exec -it tracking-db-deployment-69d9fc9ffb-dlxb5 -- /bin/bash
+mysql -u root -p < /init-tracking.sql
+kubectl apply -f tracking-deployment.yml
+
+kubectl apply -f frontend-deployment.yml
+
+kubectl port-forward gateway-service-599f4d8478-4zrns 8090:8090
+
+
+-------------------------------------------------------------------
+DOCKER
+-------------------------------------------------------------------
+npm run build
+docker build -t aribakan/frontend-microservicios:latest .
+docker push aribakan/frontend-microservicios:latest
+
+docker build -t aribakan/configservice:latest .
+docker push aribakan/configservice:latest
+
+docker build -t aribakan/eurekaservice:latest .
+docker push aribakan/eurekaservice:latest
+
+docker build -t aribakan/gateway-service:latest .
+docker push aribakan/gateway-service:latest
+
+docker build -t aribakan/simulate:latest .
+docker push aribakan/simulate:latest
+
+docker build -t aribakan/register:latest .
+docker push aribakan/register:latest
+
+docker build -t aribakan/solicitude:latest .
+docker push aribakan/solicitude:latest
+
+docker build -t aribakan/loanevaluation:latest .
+docker push aribakan/loanevaluation:latest
+
+docker build -t aribakan/tracking:latest .
+docker push aribakan/tracking:latest
+-------------------------------------------------------------------
+MYSQL
+-------------------------------------------------------------------
+Ingreso con root:
+mysql -u root -p (pide clave después de ENTER)
+
+Ingreso con usuario:
+mysql -u <usuario> -p (pide clave después de ENTER)
+
+Mostrar bases de datos:
+show databases;
+
+Usar o posicionarse en una base de datos:
+use `bankservice-simulate`;
+
+Mostrar las tablas:
+show tables;
+
+Mostrar la definición (estructura) de una tabla:
+describe simulate_entity;
+
+
+-------------------------------------------------------------------
+MINIKUBE
+-------------------------------------------------------------------
+minikube ssh
+
